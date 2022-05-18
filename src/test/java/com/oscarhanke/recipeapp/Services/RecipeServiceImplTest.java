@@ -1,9 +1,11 @@
 package com.oscarhanke.recipeapp.Services;
 
+import com.oscarhanke.recipeapp.converters.RecipeCommandToRecipe;
+import com.oscarhanke.recipeapp.converters.RecipeToRecipeCommand;
 import com.oscarhanke.recipeapp.domain.Recipe;
 import com.oscarhanke.recipeapp.repositories.RecipeRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -22,15 +24,24 @@ import static org.mockito.Mockito.when;
 class RecipeServiceImplTest {
 
     RecipeServiceImpl recipeService;
-    @Mock RecipeRepository recipeRepository;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+    @Mock
+    RecipeRepository recipeRepository;
+
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
-    @Test
+    @org.junit.Test
     public void getRecipeByIdTest() throws Exception {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
@@ -46,17 +57,17 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    void getRecipesTest() throws Exception{
+    public void getRecipesTest() throws Exception {
+
         Recipe recipe = new Recipe();
-        HashSet recipesData = new HashSet();
-        recipesData.add(recipe);
+        HashSet receipesData = new HashSet();
+        receipesData.add(recipe);
 
-        when(recipeService.getRecipes()).thenReturn(recipesData);
+        when(recipeService.getRecipes()).thenReturn(receipesData);
 
-        int expected = 1;
         Set<Recipe> recipes = recipeService.getRecipes();
 
-        assertEquals(recipes.size(), expected);
+        assertEquals(recipes.size(), 1);
         verify(recipeRepository, times(1)).findAll();
         verify(recipeRepository, never()).findById(anyLong());
     }
