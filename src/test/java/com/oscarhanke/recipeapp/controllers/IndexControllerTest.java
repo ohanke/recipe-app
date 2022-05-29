@@ -35,7 +35,7 @@ class IndexControllerTest {
         controller = new IndexController(recipeService);
     }
 
-    @org.junit.Test
+    @Test
     public void testMockMVC() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
